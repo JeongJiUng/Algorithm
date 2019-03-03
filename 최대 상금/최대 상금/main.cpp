@@ -1,15 +1,19 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <functional>
 
 using namespace std;
 
 vector<pair<int, int>>		Data;
 
 int							swap_data(int _n);
-int							compare_number(vector<int> _vec, int _count);
+vector<int>					swap(vector<int> _vec, int _index1, int _index2);
+int							findSyncIndex(vector<int> _data, vector<int> _compare, int _index);
+int							getMaxNumber(vector<int> _vec, int _count);
 int							translate_to_num(vector<int> _vec);
 vector<int>					translate_to_vec(int _num);
+vector<int>					remainProc(vector<int> _vec, int _count);
 
 int main()
 {
@@ -45,69 +49,137 @@ int swap_data(int _n)
 	int						number = Data[_n].first;
 	vector<int>				vec = translate_to_vec(number);	// number를 자릿수별로 벡터에 저장. etc.) vec[0] = 1, vec[1] = 2, vec[3] = 5
 
-	return compare_number(move(vec), Data[_n].second);
+	return getMaxNumber(move(vec), Data[_n].second);
 }
 
-int compare_number(vector<int> _vec, int _count)
+vector<int> swap(vector<int> _vec, int _index1, int _index2)
 {
-	// 벡터의 0번째 값부터 가장 큰 수와 교환.
-	// 교환 후의 값이 교환 전의 값보다 큰지 확인.
-	// 크면 교환횟수 차감 후 벡터의 다음 배열로 이동. or 크지 않으면 벡터의 다음 배열로 이동.
-	// 반복.
-	// 벡터의 마지막번째 값까지 모두 확인 했는데 교환 횟수가 남아있다면, 가장 작은 값과 그 다음 값을 교환 횟수만큼 교환.
-	int						prev/*교환 이전 데이터*/, next/*교환 이후 데이터*/;
-	vector<int>				swap_data/*값의 위치를 바꾼 임시 벡터.*/;
-	
-	prev					= translate_to_num(_vec);
+	int						temp = _vec[_index1];
+	_vec[_index1]			= _vec[_index2];
+	_vec[_index2]			= temp;
 
-	while (_count)
+	return _vec;
+}
+
+int findSyncIndex(vector<int> _data, vector<int> _compare, int _index)
+{
+	// _data의 _index 번째 값을 하나씩 위치를 교환해 보면서 _compare와 몇개나 같은지 확인.
+	// 최종적으로 중복되는 숫자의 개수가 많이 나온 교환 인덱스를 반환한다.
+	int						valMax = 0;
+	int						MaxSync = 0;
+	int						findIndex = 0;
+
+	for (int i = _index; i < _data.size(); i++)
 	{
-		// 벡터의 0번째 값부터 탐색.
-		for (int i = 0; i < _vec.size()-1; i++)
+		int					sync = 0;
+
+		if (_data[i] >= valMax)
 		{
-			// 현재 비교한 숫자중 가장 큰 숫자의 배열 위치.
-			int					top = i + 1;
-			// i + 1번째 배열의 값부터 i 번째 값이랑 크기 비교.
-			for (int j = i + 1; j < _vec.size(); j++)
+			vector<int>		temp_vec = swap(_data, _index, i);
+
+			for (int j = 0; j < temp_vec.size(); j++)
 			{
-				// j번째 배열의 값이 i번째 배열의 값보다 크고,
-				if (_vec[i] < _vec[j])
+				if (temp_vec[j] == _compare[j])
 				{
-					// j번째 배열의 값이 현재 비교한 숫사중 가장 큰 숫자의 배열 위치의 값보다 크면,
-					if (_vec[j] >= _vec[top])
-					{
-						// 현재 비교한 숫자중 가장 큰 숫자 갱신.
-						top	= j;
-					}
+					sync++;
 				}
 			}
-			// top 위치의 값고 i번째 위치의 값을 서로 교환해준다.
-			int				temp;
-			swap_data		= _vec;
-			temp			= move(swap_data[i]);
-			swap_data[i]	= move(swap_data[top]);
-			swap_data[top]	= move(temp);
 
-			next			= translate_to_num(swap_data);
-			// 교환 이후 데이터와 교환 이전 데이터를 비교해서 교환 이후 데이터가 값이 높으면 교환 횟수 차감하고 다음 탐색 진행.
-			if (next >= prev)
+			if (MaxSync <= sync)
 			{
-				prev		= next;
-				_vec		= translate_to_vec(next);
-				_count--;
+				valMax		= _data[i];
+				MaxSync		= sync;
+				findIndex	= i;
 			}
-
-			if (_count == 0)
-				break;
-		}
-
-		if (_count != 0)
-		{
-
 		}
 	}
 
-	return translate_to_num(_vec);
+	return findIndex;
+}
+
+vector<int> remainProc(vector<int> _vec, int _count)
+{
+	bool					bOverlap = false;
+	int						arr[2] = { 0 };
+
+	for (int i = 0; i < _vec.size()-1; i++)
+	{
+		for (int j = i + 1; j < _vec.size(); j++)
+		{
+			if (_vec[i] == _vec[j])
+			{
+				arr[0]		= i;
+				arr[1]		= j;
+				bOverlap	= true;
+				break;
+			}
+		}
+		if (bOverlap)
+			break;
+	}
+
+	if (!bOverlap)
+	{
+		int					min_num[2];
+		vector<int>			temp = _vec;
+		
+		sort(temp.begin(), temp.end());
+		min_num[0]			= temp[0];
+		min_num[1]			= temp[1];
+
+		for (int i = 0; i < _vec.size(); i++)
+		{
+			if (_vec[i] == min_num[0])
+				arr[0]		= i;
+
+			if (_vec[i] == min_num[1])
+				arr[1]		= i;
+		}
+	}
+
+	for (int i = 0; i < _count; i++)
+	{
+		_vec				= swap(_vec, arr[0], arr[1]);
+	}
+
+	return _vec;
+}
+
+int getMaxNumber(vector<int> _vec, int _count)
+{
+	/**
+	*	#1. 변경하려는 Data를 Vector로 생성 -> (1) data
+	*	#2. (1)을 내림차순으로 정렬한 Vector 생성 -> (2) compare
+	*	#3. (1)의 _start번째 인덱스부터 자기보다 큰 수일 경우에만 위치 교환해본다. -> (3)
+	*	#4. 교환을 한 뒤, (2)와 (3)의 숫자 배열이 몇개나 맞는지 확인 -> sync, MaxSync
+	*	#5. #3 ~ #4까지 (1)의 마지막 배열까지 반복.
+	*	#6. sync가 가장 높은(MaxSync) 인덱스 위치를 가지고 (1) 교환 수행.
+	*	#7. 교환 횟수가 다 할 때 까지 #3부터 수행.
+	**/
+	vector<int>				compare = _vec;
+	vector<int>				data	= _vec;
+
+	// 내림차순으로 정렬
+	sort(compare.begin(), compare.end(), greater<int>());
+
+	for (int i = 0; i < data.size(); i++)
+	{
+		int					index = findSyncIndex(data, compare, i);
+		data				= swap(data, i, index);
+
+		if (index != i)
+			_count--;
+
+		if (_count == 0)
+			return translate_to_num(data);
+	}
+
+	if (_count != 0)
+	{
+		data				= remainProc(data, _count);
+	}
+
+	return translate_to_num(data);
 }
 
 int translate_to_num(vector<int> _vec)
