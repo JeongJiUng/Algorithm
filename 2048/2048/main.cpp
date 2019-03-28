@@ -22,7 +22,7 @@ enum
 int							map[20][20];
 int							map_size;
 
-void move(int _dir)
+void move(int _dir, int *_map)
 {
 	switch (_dir)
 	{
@@ -40,21 +40,25 @@ void move(int _dir)
 	}
 }
 
-void solve(int _count)
+void solve(int _count, int _map[20][20])
 {
+	int						copy_map[20][20];
+
 	if (_count >= 5)
 	{
 		// TODO:: 최고값 구해서 출력.
 		return;
 	}
 
+	memcpy(copy_map, _map, sizeof(_map));
+
 	// 4방향 이동시키면서 최대값 구함.
 	for (int i = 0; i < 4; i++)
 	{
 		// TODO:: 특정 방향으로 움직이고 (move)
 		// 모든 경로를 탐색하기 위해 solve 함수를 재귀시켜 최대값 구한다.
-		move(i);
-		solve(_count +1);
+		move(i, *copy_map);
+		solve(_count +1, copy_map);
 	}
 }
 
@@ -70,5 +74,5 @@ void main()
 		}
 	}
 
-	solve(0);
+	solve(0, map);
 }
