@@ -62,3 +62,11 @@
 2048/x64/
 
 2048/2048/x64/
+
+Maaaaaaaze/Maaaaaaaze/\.vs/
+
+*.vcxproj
+
+*.filters
+
+*.user
