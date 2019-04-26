@@ -1,4 +1,4 @@
-# Prerequisites
+﻿# Prerequisites
 *.d
 
 # Compiled Object files
@@ -88,3 +88,8 @@ Maaaaaaaze/Maaaaaaaze/\.vs/
 구백구십구/Debug/
 
 구백구십구/구백구십구/Debug/
+
+*/\.vs/
+
+*/Debug/
+*/*/Debug/
