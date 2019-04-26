@@ -31,39 +31,6 @@
 *.out
 *.app
 
-구슬탈출2/\.vs/
-
-구슬탈출2/구슬탈출2/구슬탈출2\.vcxproj\.user
-
-구슬탈출2/구슬탈출2/구슬탈출2\.vcxproj\.filters
-
-구슬탈출2/구슬탈출2/구슬탈출2\.vcxproj
-
-구슬탈출2/구슬탈출2\.sln
-
-구슬탈출2/Debug/
-
-구슬탈출2/구슬탈출2/Debug/
-
-균형점/\.vs/
-
-최대 상금/\.vs/
-
-공통조상/\.vs/
-
-공통조상/Debug/
-
-공통조상/공통조상/Debug/
-
-2048/\.vs/
-
-
-
-2048/x64/
-
-2048/2048/x64/
-
-Maaaaaaaze/Maaaaaaaze/\.vs/
 
 *.vcxproj
 
@@ -71,25 +38,8 @@ Maaaaaaaze/Maaaaaaaze/\.vs/
 
 *.user
 
-삽입정렬/Debug/
-
-삽입정렬/삽입정렬/Debug/
-
-거품정렬/\.vs/
-
-병합정렬/\.vs/
-
-병합정렬/Debug/
-
-병합정렬/병합정렬/Debug/
-
-구백구십구/\.vs/
-
-구백구십구/Debug/
-
-구백구십구/구백구십구/Debug/
-
-*/\.vs/
-
-*/Debug/
+*/*/\.vs/
+x64/
+x86/
 */*/Debug/
+*/*/*/Debug/
